@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RuHi ♡ My Infinite Love</title>
+    <meta name="description" content="A tiny universe created for the girl who somehow became my favourite part of life. ♡">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        handwriting: ['Caveat', 'cursive'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fdf2f8',
+                            100: '#fce7f3',
+                            200: '#fbcfe8',
+                            300: '#f9a8d4',
+                            400: '#f472b6',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            900: '#831843',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-slow': 'float 8s ease-in-out infinite',
+                        'float-fast': 'float 4s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Utilities */
+        body {
+            background: linear-gradient(135deg, #fdf2f8 0%, #fbcfe8 50%, #f3e8ff 100%);
+            background-attachment: fixed;
+            overflow-x: hidden;
+            color: #4c1d95; /* Deep purple text for contrast */
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Floating Particles Canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fdf2f8; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fbcfe8; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f9a8d4; 
+        }
+
+        /* Polaroid styling */
+        .polaroid {
+            background: white;
+            padding: 10px 10px 30px 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .polaroid:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-300 selection:text-white">
+
+    <!-- Background Particles -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Floating Navigation -->
+    <nav class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 glass-card px-6 py-3 rounded-full flex gap-4 md:gap-8 items-center text-sm md:text-base shadow-2xl transition-all duration-300 border-white/80">
+        <a href="#home" class="hover:text-brand-600 font-medium transition-colors"><i class="fas fa-home md:hidden"></i><span class="hidden md:inline">Home</span></a>
+        <a href="#story" class="hover:text-brand-600 font-medium transition-colors"><i class="fas fa-book md:hidden"></i><span class="hidden md:inline">Story</span></a>
+        <a href="#fights" class="hover:text-brand-600 font-medium transition-colors"><i class="fas fa-bolt md:hidden"></i><span class="hidden md:inline">Us</span></a>
+        <a href="#memories" class="hover:text-brand-600 font-medium transition-colors"><i class="fas fa-images md:hidden"></i><span class="hidden md:inline">Memories</span></a>
+        <a href="#promise" class="hover:text-brand-600 font-medium transition-colors"><i class="fas fa-heart md:hidden"></i><span class="hidden md:inline">Love</span></a>
+    </nav>
+
+    <!-- Music Control -->
+    <div class="fixed top-6 right-6 z-50">
+        <button id="musicToggle" class="glass-card w-12 h-12 rounded-full flex items-center justify-center text-brand-600 hover:scale-110 transition-transform shadow-lg cursor-pointer">
+            <i class="fas fa-music"></i>
+        </button>
+        <!-- User can replace src with their own audio file -->
+        <audio id="bgAudio" loop preload="auto">
+            <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-acoustic-guitar-73.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10 flex flex-col items-center overflow-hidden">
+
+        <!-- 1. HERO SECTION -->
+        <section id="home" class="w-full min-h-screen flex flex-col justify-center items-center text-center px-4 relative pt-20 pb-10">
+            <div class="glass-card rounded-3xl p-8 md:p-16 max-w-4xl mx-auto shadow-2xl border-white/60 reveal animate-float-slow">
+                <div class="mb-4 text-brand-500 animate-pulse-slow">
+                    <i class="fas fa-infinity text-4xl"></i>
+                </div>
+                <h1 class="font-handwriting text-6xl md:text-8xl lg:text-9xl text-brand-900 mb-4 drop-shadow-sm">
+                    <span id="heroName">RuHi</span>,
+                </h1>
+                <h2 class="text-2xl md:text-4xl font-light text-brand-800 mb-6 tracking-wide">
+                    this little universe is for you. <span class="text-brand-500">♡</span>
+                </h2>
+                <p class="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto font-light mb-8 italic" id="heroSubtext">
+                    "For my lovable, cute, crazy, annoying, beautiful, one-and-only love."
+                </p>
+                
+                <div class="h-px w-24 bg-brand-300 mx-auto mb-8"></div>
+                
+                <p class="text-base md:text-lg font-medium text-brand-900 mb-10 max-w-xl mx-auto leading-relaxed">
+                    And yes… somehow, after everything, I still choose you. Every single time.
+                </p>
+
+                <a href="#story" class="inline-block px-8 py-4 bg-brand-500 text-white rounded-full font-medium tracking-wide shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:shadow-[0_0_30px_rgba(236,72,153,0.6)] hover:bg-brand-600 hover:-translate-y-1 transition-all duration-300">
+                    Enter Our Little Universe ✨
+                </a>
+            </div>
+            
+            <div class="absolute bottom-24 flex flex-col items-center animate-bounce text-brand-400 opacity-70">
+                <span class="text-sm font-handwriting text-xl mb-2">Scroll slowly… this one is made with love.</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </section>
+
+        <!-- 2. "IT'S US" SECTION -->
+        <section id="story" class="w-full min-h-screen flex flex-col justify-center items-center py-20 px-4">
+            <div class="max-w-4xl mx-auto text-center reveal">
+                <h2 class="font-handwriting text-5xl md:text-7xl text-brand-900 mb-8">Not Perfect. Just Us.</h2>
+                <div class="glass-card rounded-2xl p-8 md:p-12 mb-12 relative overflow-hidden">
+                    <!-- Decorative background element -->
+                    <div class="absolute -top-20 -right-20 w-40 h-40 bg-brand-200 rounded-full mix-blend-multiply filter blur-2xl opacity-50"></div>
+                    
+                    <p class="text-lg md:text-2xl text-gray-800 leading-relaxed font-light mb-6">
+                        "Humari story perfect nahi thi. Kabhi hasi, kabhi pagalpan, kabhi misunderstandings, kabhi fights, kabhi ego… aur kabhi bas ek dusre ko dekh kar sab theek.
+                    </p>
+                    <p class="text-xl md:text-2xl text-brand-800 leading-relaxed font-medium">
+                        But maybe that is what made it ours.
+                    </p>
+                    <p class="text-base md:text-lg text-gray-700 leading-relaxed font-light mt-6 italic">
+                        We didn't have a perfect story. We had a real one. And somehow, through all the messy little moments, you became my favourite person.
+                    </p>
+                </div>
+
+                <!-- Floating Keywords -->
+                <div class="flex flex-wrap justify-center gap-3 md:gap-4 max-w-3xl mx-auto" id="keywordsContainer">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. OUR LITTLE TIMELINE -->
+        <section class="w-full py-20 px-4 relative">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="font-handwriting text-5xl md:text-6xl text-brand-900">How You Slowly Became My Forever</h2>
+                </div>
+                
+                <div class="relative wrap overflow-hidden p-2 md:p-10 h-full" id="timelineContainer">
+                    <!-- Vertical Line -->
+                    <div class="border-2-2 absolute border-opacity-20 border-brand-500 h-full border left-1/2 -ml-[1px] rounded-full drop-shadow-[0_0_5px_rgba(236,72,153,0.5)]"></div>
+                    <!-- Items Injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. THE FIGHTS SECTION -->
+        <section id="fights" class="w-full py-24 px-4 bg-white/20">
+            <div class="max-w-5xl mx-auto text-center">
+                <div class="reveal mb-12">
+                    <h2 class="font-handwriting text-5xl md:text-7xl text-brand-900 mb-2">Yes, We Fought.</h2>
+                    <h3 class="text-xl md:text-2xl font-light text-brand-700 italic">And I don't want to erase that part of our story.</h3>
+                </div>
+
+                <div class="glass-card rounded-2xl p-6 md:p-10 mb-16 max-w-3xl mx-auto reveal">
+                    <p class="text-lg md:text-xl text-gray-800 leading-relaxed font-light mb-4">
+                        "Hum lade hain. Kabhi choti baat pe, kabhi badi baat pe. Kabhi meri galti thi, kabhi tumhari, aur kabhi bas dono ka mood aur situation galat thi.
+                    </p>
+                    <p class="text-lg md:text-xl text-gray-800 leading-relaxed font-light mb-4">
+                        But I don't want our difficult moments to become reasons to forget the beautiful ones. Every fight taught me something — about you, about me, and about us.
+                    </p>
+                    <p class="text-xl md:text-2xl text-brand-800 leading-relaxed font-medium">
+                        And somewhere between every 'gussa', every 'leave me alone', every 'okay fine', and every 'sorry'… we kept finding our way back to each other."
+                    </p>
+                </div>
+
+                <!-- Fight Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="fightsContainer">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. SORRY, BUT ALSO THANK YOU -->
+        <section class="w-full py-24 px-4 overflow-hidden">
+            <div class="max-w-6xl mx-auto relative flex flex-col md:flex-row gap-8 items-stretch justify-center">
+                
+                <!-- Left: Sorry -->
+                <div class="flex-1 glass-card p-8 md:p-12 rounded-l-3xl md:rounded-r-none rounded-r-3xl reveal-left flex flex-col justify-center border-r-0 md:border-r border-white/50 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-brand-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <h3 class="font-handwriting text-4xl text-brand-800 mb-6 relative z-10">I'm Sorry ❤️</h3>
+                    <ul class="space-y-4 text-gray-700 font-light relative z-10">
+                        <li>• For the moments when my words were harsher than they should've been.</li>
+                        <li>• For times I didn't understand you properly.</li>
+                        <li>• For the moments when my ego spoke louder than my love.</li>
+                        <li>• And for every time I could have handled things better.</li>
+                    </ul>
+                </div>
+
+                <!-- Middle Heart Connector (visible on desktop) -->
+                <div class="hidden md:flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 w-16 h-16 bg-brand-500 rounded-full items-center justify-center text-white shadow-xl text-2xl reveal animate-pulse-slow">
+                    <i class="fas fa-heart"></i>
+                </div>
+
+                <!-- Right: Thank You -->
+                <div class="flex-1 glass-card p-8 md:p-12 rounded-r-3xl md:rounded-l-none rounded-l-3xl reveal-right flex flex-col justify-center relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-bl from-purple-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <h3 class="font-handwriting text-4xl text-brand-800 mb-6 relative z-10">Thank You ♡</h3>
+                    <ul class="space-y-4 text-gray-700 font-light relative z-10">
+                        <li>• For staying.</li>
+                        <li>• For understanding me even when I was difficult.</li>
+                        <li>• For the countless little memories.</li>
+                        <li>• For making ordinary days feel special.</li>
+                        <li>• And for becoming such a beautiful part of my life.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 6. THINGS I LOVE ABOUT YOU -->
+        <section class="w-full py-24 px-4">
+            <div class="max-w-6xl mx-auto text-center">
+                <h2 class="font-handwriting text-5xl md:text-6xl text-brand-900 mb-16 reveal">A Few Things I Love About You…</h2>
+                
+                <div class="relative w-full min-h-[400px] flex items-center justify-center flex-wrap gap-4" id="thingsILoveContainer">
+                    <!-- Center Anchor -->
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 glass-card p-6 rounded-full shadow-2xl reveal">
+                        <p class="font-handwriting text-2xl md:text-3xl text-brand-700 m-0 leading-none">And honestly...</p>
+                        <p class="text-sm font-light">the list could keep going forever.</p>
+                    </div>
+                    <!-- Cards injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. CRAZY LOVE METER -->
+        <section class="w-full py-24 px-4 flex justify-center items-center">
+            <div class="glass-card rounded-3xl p-10 max-w-md w-full text-center reveal shadow-[0_10px_50px_rgba(236,72,153,0.15)] relative overflow-hidden">
+                <h2 class="font-handwriting text-4xl text-brand-900 mb-2">How Much Do I Love You?</h2>
+                <p class="text-sm text-gray-500 mb-8 font-light">Tap the heart to measure</p>
+                
+                <div class="relative h-64 flex flex-col justify-end items-center mb-6">
+                    <!-- Meter Fill -->
+                    <div class="absolute bottom-0 w-24 bg-gradient-to-t from-brand-300 to-brand-500 rounded-t-full transition-all duration-500 ease-out" id="meterFill" style="height: 0%;"></div>
+                    <!-- Glass Tube overlay -->
+                    <div class="absolute bottom-0 w-24 h-full border-2 border-white/60 rounded-t-full bg-white/10 backdrop-blur-sm z-10 pointer-events-none"></div>
+                    
+                    <!-- The Button -->
+                    <button id="meterBtn" class="absolute -bottom-6 z-20 w-16 h-16 bg-white rounded-full shadow-xl flex items-center justify-center text-3xl text-brand-500 hover:scale-110 active:scale-95 transition-transform cursor-pointer">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+
+                <div class="mt-8">
+                    <span id="meterValue" class="text-5xl font-bold text-brand-800 tracking-tighter">0%</span>
+                    <p id="meterText" class="text-brand-600 mt-2 h-6 font-medium italic opacity-0 transition-opacity duration-300"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. "OUR VIBE" -->
+        <section class="w-full py-20 px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6" id="vibeContainer">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. A SECRET BUTTON -->
+        <section class="w-full py-10 flex flex-col items-center justify-center relative min-h-[300px]">
+            <button id="secretBtn" class="text-xs text-gray-400 hover:text-brand-500 transition-colors bg-white/20 px-3 py-1 rounded-full cursor-pointer z-20">
+                Don't click this.
+            </button>
+            <div id="secretMessage" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center opacity-0 scale-50 transition-all duration-500 pointer-events-none z-10 w-full px-4">
+                <p class="font-handwriting text-3xl md:text-5xl text-brand-600 mb-2" id="secretText1">I knew you'd click it. 😂</p>
+                <p class="text-lg md:text-xl font-light text-brand-800" id="secretText2">Anyway… I love you. ❤️</p>
+            </div>
+        </section>
+
+        <!-- 10. "MY PROMISE" -->
+        <section id="promise" class="w-full py-32 px-4 glass-dark relative">
+            <!-- Subtle background elements -->
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-brand-500 rounded-full mix-blend-screen filter blur-[100px] opacity-20 animate-pulse-slow"></div>
+                <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500 rounded-full mix-blend-screen filter blur-[120px] opacity-20 animate-float-slow"></div>
+            </div>
+
+            <div class="max-w-3xl mx-auto text-center relative z-10 reveal">
+                <h2 class="font-handwriting text-5xl md:text-7xl text-brand-300 mb-12 text-glow">One Simple Promise</h2>
+                
+                <div class="space-y-6 text-xl md:text-2xl font-light text-slate-200 leading-relaxed text-left md:text-center mx-auto max-w-2xl">
+                    <p class="reveal">I can't promise that we'll never fight.</p>
+                    <p class="reveal">I can't promise that I'll always say the perfect thing.</p>
+                    <p class="reveal">I can't promise that every day will be easy.</p>
+                    <p class="reveal font-medium text-white mt-8">But I can promise that I'll keep learning how to love you better.</p>
+                    <p class="reveal">I'll keep choosing communication over ego.</p>
+                    <p class="reveal">I'll keep choosing us over unnecessary misunderstandings.</p>
+                    <p class="reveal mt-8 italic text-brand-200">And whenever things get messy…</p>
+                    <p class="reveal font-handwriting text-4xl md:text-5xl text-brand-400 pt-4">I'll remember why you matter to me.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. "OUR LITTLE FUTURE" -->
+        <section class="w-full py-24 px-4 bg-white/30">
+            <div class="max-w-5xl mx-auto text-center reveal">
+                <h2 class="font-handwriting text-5xl text-brand-900 mb-12">More Memories Loading…</h2>
+                
+                <div class="flex flex-wrap justify-center items-center gap-2 md:gap-4 text-sm md:text-base font-medium text-brand-700">
+                    <span class="glass-card px-4 py-2 rounded-full">More random calls</span>
+                    <i class="fas fa-arrow-right text-brand-400 text-xs"></i>
+                    <span class="glass-card px-4 py-2 rounded-full">More dates</span>
+                    <i class="fas fa-arrow-right text-brand-400 text-xs"></i>
+                    <span class="glass-card px-4 py-2 rounded-full">More photos</span>
+                    <i class="fas fa-arrow-right text-brand-400 text-xs"></i>
+                    <span class="glass-card px-4 py-2 rounded-full border-brand-300">More fights over stupid things 🙄</span>
+                    <i class="fas fa-arrow-right text-brand-400 text-xs"></i>
+                    <span class="glass-card px-4 py-2 rounded-full">More apologies</span>
+                    <i class="fas fa-arrow-right text-brand-400 text-xs"></i>
+                    <span class="glass-card px-4 py-2 rounded-full">More laughter</span>
+                    <i class="fas fa-arrow-right text-brand-400 text-xs"></i>
+                    <span class="glass-card px-4 py-2 rounded-full">More us</span>
+                </div>
+                
+                <div class="mt-16 text-2xl font-handwriting text-brand-800 animate-pulse">To be continued...</div>
+            </div>
+        </section>
+
+        <!-- 12. MAIN LOVE MESSAGE -->
+        <section class="w-full min-h-screen flex flex-col justify-center items-center py-20 px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl md:text-5xl font-light text-brand-900 mb-12 reveal">RuHi, after everything…</h2>
+                
+                <div id="messageSequence" class="space-y-6 text-2xl md:text-4xl font-handwriting text-brand-700 mb-16 h-64 md:h-80 relative">
+                    <!-- Injected via JS for sequenced reveal -->
+                </div>
+
+                <div class="reveal mt-12">
+                    <p class="text-xl md:text-3xl font-light text-brand-900 mb-4 bg-white/40 px-6 py-4 rounded-2xl inline-block backdrop-blur-sm shadow-sm border border-white/50">
+                        Because my love for you doesn't come with an expiry date.
+                    </p>
+                    <div class="mt-6 text-brand-500 flex flex-col items-center">
+                        <span class="text-lg mb-2 text-brand-700">It comes with an</span>
+                        <i class="fas fa-infinity text-6xl animate-pulse-slow drop-shadow-md"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 13. PHOTO / MEMORY AREA -->
+        <section id="memories" class="w-full py-24 px-4 bg-brand-50/50">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="font-handwriting text-5xl md:text-6xl text-brand-900 mb-2">Our Frames</h2>
+                    <p class="text-gray-500 font-light">Hover to see them closer.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-4" id="galleryContainer">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 14. FINAL SCREEN -->
+        <section class="w-full py-32 px-4 flex justify-center">
+            <div class="glass-card max-w-2xl w-full p-8 md:p-16 rounded-[2rem] shadow-2xl relative border-white/70">
+                <!-- Pin decoration -->
+                <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-brand-300 rounded-full shadow-inner border-2 border-white/80 z-10 flex items-center justify-center">
+                    <div class="w-2 h-2 bg-brand-100 rounded-full"></div>
+                </div>
+
+                <h2 class="font-handwriting text-4xl text-brand-800 mb-8 border-b border-brand-200 pb-4">For My RuHi ♡</h2>
+                
+                <div class="space-y-4 text-lg text-gray-700 leading-relaxed font-sans font-light">
+                    <p>You are not just a chapter in my life. You somehow became part of the way I see life itself.</p>
+                    <p>We've had beautiful days.<br>
+                    We've had stupid fights.<br>
+                    We've misunderstood each other.<br>
+                    We've said sorry.<br>
+                    We've laughed again.</p>
+                    <p>And through all of it, somehow, there is still this one feeling that refuses to disappear…</p>
+                    <p class="font-medium text-brand-900 text-xl pt-4">I love you.</p>
+                    <p class="italic">A little more than yesterday.<br>And probably a little less than tomorrow.</p>
+                </div>
+
+                <div class="mt-12 text-center">
+                    <p class="text-xl font-light text-brand-800 mb-2">Forever sounds like a long time…</p>
+                    <p class="font-handwriting text-3xl text-brand-600 reveal">…but with you, I wouldn't mind. ❤️</p>
+                </div>
+
+                <div class="mt-16 pt-8 border-t border-brand-200 flex flex-col items-end text-right">
+                    <p class="text-xs text-gray-400 mb-4 max-w-xs font-light">Made with too much love, a little craziness, and absolutely no intention of getting normal.</p>
+                    <p class="font-handwriting text-3xl text-brand-900">— Yours, always ♾️</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 15. FINAL UX DETAIL -->
+        <footer class="w-full py-12 text-center pb-32">
+            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="mb-6 px-6 py-2 glass-card rounded-full text-brand-700 hover:text-white hover:bg-brand-500 transition-colors text-sm flex items-center gap-2 mx-auto cursor-pointer">
+                Start Again <i class="fas fa-redo text-xs"></i>
+            </button>
+            <p class="text-sm text-gray-500 font-light italic mb-2">
+                "No matter how many times this page starts… my favourite part will always be you."
+            </p>
+            <p class="font-handwriting text-xl text-brand-400">RuHi ♡ Infinite.</p>
+        </footer>
+
+    </main>
+
+    <script>
+        /**
+         * ==========================================
+         * CONFIGURATION SECTION (EASY TO EDIT)
+         * ==========================================
+         */
+        const SITE_CONFIG = {
+            names: {
+                her: "RuHi", // Used in hero and titles
+            },
+            timeline: [
+                { date: "13 Nov 2022", title: "The day I first saw you.", desc: "I didn't know it then… but something had quietly changed." },
+                { date: "18 Dec 2022", title: "Our first message.", desc: "One tiny message. And look where that conversation brought us." },
+                { date: "23 Dec 2022", title: "Your first reply.", desc: "Apparently, waiting was worth it. ❤️" },
+                { date: "28 Mar 2023", title: "Our first call.", desc: "A voice that slowly started feeling like home." },
+                { date: "2 Aug 2023", title: "Our first date.", desc: "One day that still lives rent-free in my heart." },
+                { date: "25 Jun 2024", title: "That unforgettable kiss.", desc: "No explanation needed. Just one beautiful memory." }
+            ],
+            keywords: [
+                "Laughs", "Fights", "Teasing", "Missing You", "Late Talks", 
+                "Silence", "Sorry", "Forgive", "Repeat", "Love"
+            ],
+            fights: [
+                { title: "The Stupid Fight", desc: "Reason: Probably something we laugh about now." },
+                { title: "The Ego Fight", desc: "Duration: Longer than necessary 😭" },
+                { title: "The Silent Treatment", desc: "Achievement unlocked: Both pretending they don't care." },
+                { title: "The 'Fine' Fight", desc: "Translation: Nothing was fine." }
+            ],
+            thingsILove: [
+                "Your smile", "Your random mood swings", "Your little reactions", 
+                "The way you talk", "Your cute anger", "Your caring side", 
+                "Your confidence", "Your silly moments", "Your 'nothing happened' when EVERYTHING happened 😭",
+                "The way you somehow became my comfort person", 
+                "The way you make me miss you even after talking to you", "Simply… you"
+            ],
+            vibeStats: [
+                { label: "Fights", value: "∞" },
+                { label: "Laughs", value: "∞" },
+                { label: "Random Talks", value: "∞" },
+                { label: "Missing Each Other", value: "Too much", textClass: "text-2xl" },
+                { label: "Forgiveness", value: "Loading… 😂", textClass: "text-xl" },
+                { label: "Us", value: "1 of 1" }
+            ],
+            mainMessageSequence: [
+                "I still adore you.",
+                "I still choose you.",
+                "I still want to make you smile.",
+                "I still want more memories with you.",
+                "I still want more stupid conversations with you.",
+                "I still want more 'sorry' and 'okay fine' moments.",
+                "I still want us."
+            ],
+            // Replace placeholder URLs with actual image links
+            gallery: [
+                { label: "Add Our First Photo", url: "https://placehold.co/400x400/fbcfe8/831843?text=First+Photo" },
+                { label: "Add Our Favourite Memory", url: "https://placehold.co/400x400/f9a8d4/831843?text=Fav+Memory" },
+                { label: "Add A Random Cute Moment", url: "https://placehold.co/400x400/f472b6/ffffff?text=Cute+Moment" },
+                { label: "Add A Picture That Makes Me Smile", url: "https://placehold.co/400x400/ec4899/ffffff?text=Makes+Me+Smile" }
+            ]
+        };
+
+        /**
+         * ==========================================
+         * INITIALIZATION & RENDER LOGIC
+         * ==========================================
+         */
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            // 1. Render Dynamic Content
+            renderKeywords();
+            renderTimeline();
+            renderFights();
+            renderThingsILove();
+            renderVibeStats();
+            renderMessageSequence();
+            renderGallery();
+
+            // 2. Setup Interactions
+            setupScrollAnimations();
+            setupMusicPlayer();
+            setupLoveMeter();
+            setupSecretButton();
+            setupCanvasParticles();
+        });
+
+        // --- Render Functions ---
+
+        function renderKeywords() {
+            const container = document.getElementById('keywordsContainer');
+            SITE_CONFIG.keywords.forEach((word, index) => {
+                const delay = (index % 5) * 100;
+                const html = `<span class="glass-card px-4 py-2 rounded-full text-brand-700 font-medium text-sm md:text-base reveal shadow-sm" style="transition-delay: ${delay}ms">${word}</span>`;
+                container.innerHTML += html;
+            });
+        }
+
+        function renderTimeline() {
+            const container = document.getElementById('timelineContainer');
+            SITE_CONFIG.timeline.forEach((item, index) => {
+                const isLeft = index % 2 === 0;
+                // Desktop: alternating. Mobile: all left-aligned visually via flex.
+                const html = `
+                    <div class="mb-8 flex justify-between items-center w-full ${isLeft ? 'flex-row-reverse' : ''} reveal">
+                        <div class="order-1 w-5/12 hidden md:block"></div>
+                        
+                        <div class="z-20 flex items-center order-1 bg-brand-500 shadow-xl w-6 h-6 rounded-full flex-shrink-0 relative">
+                             <div class="absolute inset-0 bg-brand-300 rounded-full animate-ping opacity-50"></div>
+                             <i class="fas fa-heart text-[10px] text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+                        </div>
+                        
+                        <div class="order-1 glass-card rounded-2xl w-[85%] md:w-5/12 px-6 py-4 transition-transform hover:-translate-y-1 hover:shadow-lg ml-4 md:ml-0 cursor-default">
+                            <h3 class="mb-1 font-bold text-brand-900 text-lg">${item.date}</h3>
+                            <h4 class="font-handwriting text-2xl text-brand-600 mb-1">${item.title}</h4>
+                            <p class="text-sm leading-snug tracking-wide text-gray-600 font-light text-opacity-100">${item.desc}</p>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function renderFights() {
+            const container = document.getElementById('fightsContainer');
+            SITE_CONFIG.fights.forEach((fight, index) => {
+                const delay = index * 100;
+                const html = `
+                    <div class="glass-card p-6 rounded-2xl text-left cursor-pointer group hover:bg-white/50 transition-all duration-300 reveal border-brand-200" style="transition-delay: ${delay}ms" onclick="this.querySelector('.fight-msg').classList.toggle('hidden'); this.querySelector('.fight-desc').classList.toggle('hidden');">
+                        <h4 class="font-handwriting text-2xl md:text-3xl text-brand-800 mb-2 group-hover:text-brand-600 transition-colors">${fight.title}</h4>
+                        <p class="text-gray-600 font-light fight-desc">${fight.desc}</p>
+                        <p class="text-brand-500 font-medium mt-2 hidden fight-msg animate-pulse">"Anyway… I would still rather fix things with you than lose you over them." ♡</p>
+                        <div class="text-xs text-brand-300 mt-4 text-right"><i class="fas fa-hand-pointer"></i> Tap to reveal</div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function renderThingsILove() {
+            const container = document.getElementById('thingsILoveContainer');
+            SITE_CONFIG.thingsILove.forEach((thing, index) => {
+                // Random position and slight rotation for a chaotic cute look
+                const rotate = Math.floor(Math.random() * 10) - 5;
+                const delay = (index % 4) * 200;
+                // Add varied float animations
+                const animClass = index % 3 === 0 ? 'animate-float-fast' : (index % 2 === 0 ? 'animate-float-slow' : 'animate-float');
+                
+                const html = `
+                    <div class="glass-card px-5 py-3 rounded-2xl text-brand-800 font-medium text-sm md:text-base reveal ${animClass} shadow-sm m-1 hover:z-30 hover:scale-110 transition-transform cursor-default" 
+                         style="transform: rotate(${rotate}deg); transition-delay: ${delay}ms;">
+                        ${thing}
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function renderVibeStats() {
+            const container = document.getElementById('vibeContainer');
+            SITE_CONFIG.vibeStats.forEach((stat, index) => {
+                const textClass = stat.textClass || "text-4xl md:text-5xl";
+                const html = `
+                    <div class="glass-card p-4 rounded-2xl text-center reveal border-white/50 hover:bg-white/40 transition-colors">
+                        <div class="font-handwriting ${textClass} text-brand-600 mb-1">${stat.value}</div>
+                        <div class="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">${stat.label}</div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function renderMessageSequence() {
+            const container = document.getElementById('messageSequence');
+            SITE_CONFIG.mainMessageSequence.forEach((msg, index) => {
+                // Position absolute to overlay them, fade them in/out on scroll
+                const html = `<div class="absolute w-full top-1/2 left-0 transform -translate-y-1/2 transition-opacity duration-700 opacity-0 seq-msg" data-index="${index}">${msg}</div>`;
+                container.innerHTML += html;
+            });
+        }
+
+        function renderGallery() {
+            const container = document.getElementById('galleryContainer');
+            SITE_CONFIG.gallery.forEach((pic, index) => {
+                const rotate = index % 2 === 0 ? 'rotate-2' : '-rotate-2';
+                const delay = index * 150;
+                const html = `
+                    <div class="polaroid rounded-sm flex flex-col justify-between items-center reveal ${rotate}" style="transition-delay: ${delay}ms;">
+                        <div class="w-full aspect-square bg-gray-200 overflow-hidden mb-4 relative group cursor-pointer">
+                            <img src="${pic.url}" alt="${pic.label}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <!-- Overlay -->
+                            <div class="absolute inset-0 bg-brand-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <i class="fas fa-heart text-white text-3xl animate-pulse"></i>
+                            </div>
+                        </div>
+                        <p class="font-handwriting text-xl text-brand-800 text-center">${pic.label}</p>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        // --- Interaction Logic ---
+
+        function setupScrollAnimations() {
+            const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+            const seqMsgs = document.querySelectorAll('.seq-msg');
+            const msgSection = document.getElementById('messageSequence');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+
+            reveals.forEach(el => observer.observe(el));
+
+            // Special handling for the message sequence based on scroll position
+            if(msgSection && seqMsgs.length > 0) {
+                window.addEventListener('scroll', () => {
+                    const rect = msgSection.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+                    
+                    // If section is in view
+                    if (rect.top < windowHeight && rect.bottom > 0) {
+                        // Calculate progress through the section
+                        const scrollProgress = 1 - (rect.bottom / (windowHeight + rect.height));
+                        
+                        // Map progress to the array index
+                        let index = Math.floor(scrollProgress * (seqMsgs.length * 1.5)); // 1.5 multiplier makes it end earlier
+                        
+                        seqMsgs.forEach((msg, i) => {
+                            if (i === index) {
+                                msg.style.opacity = '1';
+                                msg.style.transform = 'translate-y-1/2 scale(1.1)';
+                            } else {
+                                msg.style.opacity = '0';
+                                msg.style.transform = 'translate-y-1/2 scale(0.9)';
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        function setupMusicPlayer() {
+            const toggle = document.getElementById('musicToggle');
+            const audio = document.getElementById('bgAudio');
+            let isPlaying = false;
+
+            if(toggle && audio) {
+                toggle.addEventListener('click', () => {
+                    if (isPlaying) {
+                        audio.pause();
+                        toggle.innerHTML = '<i class="fas fa-music"></i>';
+                        toggle.classList.remove('animate-pulse');
+                    } else {
+                        // Handle browser autoplay policy by triggering on user interaction
+                        audio.play().catch(e => console.log("Audio play failed:", e));
+                        toggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+                        toggle.classList.add('animate-pulse');
+                    }
+                    isPlaying = !isPlaying;
+                });
+            }
+        }
+
+        function setupLoveMeter() {
+            const btn = document.getElementById('meterBtn');
+            const fill = document.getElementById('meterFill');
+            const valueDisplay = document.getElementById('meterValue');
+            const textDisplay = document.getElementById('meterText');
+            
+            let clicks = 0;
+            const levels = [
+                { val: 0, text: "" },
+                { val: 10, text: "Okay, starting somewhere..." },
+                { val: 50, text: "Getting warmer..." },
+                { val: 100, text: "Maximum capacity?" },
+                { val: 1000, text: "Wait, that's impossible..." }
+            ];
+
+            if(btn) {
+                btn.addEventListener('click', () => {
+                    clicks++;
+                    btn.classList.remove('animate-bounce'); // Stop bounce on first click
+                    
+                    if (clicks < levels.length) {
+                        const level = levels[clicks];
+                        fill.style.height = level.val > 100 ? '100%' : `${level.val}%`;
+                        valueDisplay.innerText = `${level.val}%`;
+                        textDisplay.innerText = level.text;
+                        textDisplay.style.opacity = '1';
+                        
+                        // Change color based on level
+                        if(clicks === 3) fill.classList.replace('from-brand-300', 'from-purple-400');
+                    } else {
+                        // Break it
+                        fill.style.height = '120%';
+                        fill.classList.replace('from-purple-400', 'from-red-500');
+                        fill.classList.add('animate-pulse');
+                        
+                        valueDisplay.innerHTML = '<i class="fas fa-infinity"></i>';
+                        valueDisplay.classList.add('text-red-500', 'animate-pulse');
+                        
+                        textDisplay.innerText = "System Error: Love exceeded measurable limits.";
+                        textDisplay.classList.add('text-red-500');
+                        
+                        // Heart explosion effect
+                        createFloatingHearts(btn);
+                        
+                        // Disable further clicks
+                        btn.disabled = true;
+                        btn.style.opacity = '0.5';
+                    }
+                });
+            }
+        }
+
+        function setupSecretButton() {
+            const btn = document.getElementById('secretBtn');
+            const msgContainer = document.getElementById('secretMessage');
+            const t1 = document.getElementById('secretText1');
+            const t2 = document.getElementById('secretText2');
+            let clicked = 0;
+
+            if(btn) {
+                btn.addEventListener('click', () => {
+                    clicked++;
+                    if (clicked === 1) {
+                        btn.style.opacity = '0';
+                        setTimeout(() => { btn.style.display = 'none'; }, 300);
+                        
+                        msgContainer.style.opacity = '1';
+                        msgContainer.style.transform = 'translate(-50%, -50%) scale(1)';
+                        
+                        createFloatingHearts(msgContainer);
+                    } else if (clicked === 2) {
+                        t1.innerText = "Okay, one more thing…";
+                        t2.innerText = "No matter how many times life presses refresh, I still want you in my story.";
+                        t1.classList.remove('font-handwriting', 'text-brand-600', 'text-5xl');
+                        t1.classList.add('font-light', 'text-gray-500', 'text-lg');
+                        t2.classList.remove('font-light', 'text-lg');
+                        t2.classList.add('font-handwriting', 'text-4xl', 'text-brand-800', 'mt-2');
+                    }
+                });
+            }
+        }
+
+        // Utility: Create floating hearts originating from an element
+        function createFloatingHearts(sourceElement) {
+            const rect = sourceElement.getBoundingClientRect();
+            const colors = ['#f472b6', '#ec4899', '#db2777', '#a855f7'];
+            
+            for(let i=0; i<15; i++) {
+                const heart = document.createElement('i');
+                heart.className = 'fas fa-heart fixed z-50 pointer-events-none';
+                
+                // Randomize styles
+                const size = Math.random() * 20 + 10; // 10px to 30px
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const startX = rect.left + (rect.width/2) + (Math.random() * 40 - 20);
+                const startY = rect.top + (rect.height/2);
+                
+                heart.style.fontSize = `${size}px`;
+                heart.style.color = color;
+                heart.style.left = `${startX}px`;
+                heart.style.top = `${startY}px`;
+                
+                // Animation via Web Animations API
+                document.body.appendChild(heart);
+                
+                const angle = (Math.random() - 0.5) * Math.PI; // -90 to 90 deg spread
+                const distance = Math.random() * 150 + 100;
+                const endX = startX + Math.sin(angle) * distance;
+                const endY = startY - Math.cos(angle) * distance - 100; // Move up
+
+                const animation = heart.animate([
+                    { transform: 'translate(0, 0) scale(1) rotate(0deg)', opacity: 1 },
+                    { transform: `translate(${endX - startX}px, ${endY - startY}px) scale(0) rotate(${Math.random() * 180 - 90}deg)`, opacity: 0 }
+                ], {
+                    duration: 1000 + Math.random() * 1000,
+                    easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+                });
+
+                animation.onfinish = () => heart.remove();
+            }
+        }
+
+        // Background subtle particle effect on Canvas
+        function setupCanvasParticles() {
+            const canvas = document.getElementById('particle-canvas');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            let width, height;
+            let particles = [];
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.size = Math.random() * 2 + 0.5;
+                    this.speedY = Math.random() * -0.5 - 0.1; // Move up slowly
+                    this.speedX = Math.random() * 0.4 - 0.2;
+                    // Soft pink/purple colors
+                    const r = 240 + Math.floor(Math.random() * 15);
+                    const g = 180 + Math.floor(Math.random() * 70);
+                    const b = 220 + Math.floor(Math.random() * 35);
+                    this.color = `rgba(${r}, ${g}, ${b}, ${Math.random() * 0.5 + 0.1})`;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    // Reset if out of bounds
+                    if (this.y < 0) {
+                        this.y = height;
+                        this.x = Math.random() * width;
+                    }
+                    if (this.x < 0 || this.x > width) {
+                        this.speedX *= -1;
+                    }
+                }
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Create initial particles based on screen size
+            const particleCount = Math.floor((width * height) / 15000); // Responsive count
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+    </script>
+</body>
+</html>
